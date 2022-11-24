@@ -20,6 +20,7 @@ const run = async () => {
 
         // ---> database collections
         const clientsReviewsCollection = client.db("mobilePlaza").collection("reviewsCollection");
+        const categoriesCollection = client.db("mobilePlaza").collection("categories");
 
 
         // -----> test api 
@@ -31,6 +32,13 @@ const run = async () => {
         app.get('/reviews', async (req, res) => {
             const query = {};
             const result = await clientsReviewsCollection.find(query).toArray();
+            res.send(result)
+        })
+
+        // ---> categories 
+        app.get('/categories', async (req, res) => {
+            const query = {};
+            const result = await categoriesCollection.find(query).toArray();
             res.send(result)
         })
 
