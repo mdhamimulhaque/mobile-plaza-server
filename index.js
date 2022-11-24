@@ -18,9 +18,20 @@ const run = async () => {
         const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.76zc9vk.mongodb.net/?retryWrites=true&w=majority`;
         const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-        //    -----> test api 
-        app.get('/', (req, res) => {
+        // ---> database collections
+        const clientsReviewsCollection = client.db("mobilePlaza").collection("reviewsCollection");
+
+
+        // -----> test api 
+        app.get('/', async (req, res) => {
             res.send('phone plaza server is running')
+        });
+
+        // ---> reviews collections
+        app.get('/reviews', async (req, res) => {
+            const query = {};
+            const result = await clientsReviewsCollection.find(query).toArray();
+            res.send(result)
         })
 
 
