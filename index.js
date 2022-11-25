@@ -24,6 +24,7 @@ const run = async () => {
         const categoriesCollection = client.db("mobilePlaza").collection("categories");
         const productsCollection = client.db("mobilePlaza").collection("products");
         const usersCollection = client.db("mobilePlaza").collection("users");
+        const bookingCollection = client.db("mobilePlaza").collection("booking");
 
 
         // -----> test api 
@@ -57,6 +58,13 @@ const run = async () => {
         app.post('/users', async (req, res) => {
             const userInfo = req.body.body;
             const result = await usersCollection.insertOne(userInfo);
+            res.send(result)
+        })
+
+        // ---> store booking data
+        app.post('/booking', async (req, res) => {
+            const bookingData = req.body.body;
+            const result = await bookingCollection.insertOne(bookingData);
             res.send(result)
         })
 
