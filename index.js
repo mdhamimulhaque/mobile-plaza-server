@@ -55,8 +55,15 @@ const run = async () => {
         })
 
         // ---> store users data
-        app.post('/users', async (req, res) => {
+        app.put('/users', async (req, res) => {
             const userInfo = req.body.body;
+            const email = userInfo.email;
+            const query = { email: email }
+            const findUser = await usersCollection.findOne(query);
+            if (findUser) {
+                return
+            }
+
             const result = await usersCollection.insertOne(userInfo);
             res.send(result)
         })
