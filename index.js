@@ -63,14 +63,7 @@ const run = async () => {
         })
 
         // ---> categories 
-        app.get('/categories', verifyJWT, async (req, res) => {
-            const email = req.query.email;
-            const decodedEmail = req.decoded.email;
-
-            if (email !== decodedEmail) {
-                return res.status(403).send({ message: 'forbidden access' })
-            }
-
+        app.get('/categories', async (req, res) => {
             const query = {};
             const result = await categoriesCollection.find(query).toArray();
             res.send(result)
