@@ -3,7 +3,7 @@ const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const { response } = require('express');
+
 
 const app = express()
 const port = process.env.PORT || 5000;
@@ -89,9 +89,16 @@ const run = async () => {
             const newProduct = req.body.body;
             const result = await productsCollection.insertOne(newProduct);
             res.send(result)
-            console.log(newProduct)
-
         })
+
+        // ---> my products
+        app.get('/my-products', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await bookingCollection.find(query).toArray();
+            res.send(result)
+        })
+
 
         // ---> store users data
         app.put('/users', async (req, res) => {
@@ -110,8 +117,8 @@ const run = async () => {
         // ---> store booking data
         app.post('/booking', async (req, res) => {
             const bookingData = req.body.body;
-            // const result = await bookingCollection.insertOne(bookingData);
-            // res.send(result)
+            const result = await bookingCollection.insertOne(bookingData);
+            res.send(result)
         })
         // ---> get booking products
         // app.get('/booking',async(req,res)=>{
