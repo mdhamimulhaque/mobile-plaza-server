@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
@@ -96,6 +96,14 @@ const run = async () => {
             const email = req.query.email;
             const query = { email: email };
             const result = await bookingCollection.find(query).toArray();
+            res.send(result)
+        })
+
+        // ---> my product delete
+        app.delete('/my-products/:id', verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await bookingCollection.deleteOne(query);
             res.send(result)
         })
 
