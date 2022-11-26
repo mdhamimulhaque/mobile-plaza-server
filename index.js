@@ -3,6 +3,7 @@ const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const { response } = require('express');
 
 const app = express()
 const port = process.env.PORT || 5000;
@@ -10,6 +11,28 @@ const port = process.env.PORT || 5000;
 // ---> middle wares
 app.use(cors());
 app.use(express.json());
+
+
+
+// ---> verify jwt
+const verifyJWT = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).send('unauthorized access');
+    }
+    const token = authHeader.split(' ')[1];
+
+    // ---> verify access
+    jwt.verify(token, process.env.TOKEN_SECRET, function (err, decoded) {
+        if (err) {
+            return res.status(403).send({ message: 'forbidden access' })
+        }
+        req.decoded = decoded;
+    });
+
+    next()
+}
+
 
 
 // ---> database use
@@ -40,7 +63,14 @@ const run = async () => {
         })
 
         // ---> categories 
-        app.get('/categories', async (req, res) => {
+        app.get('/categories', verifyJWT, async (req, res) => {
+            const email = req.query.email;
+            const decodedEmail = req.decoded.email;
+
+            if (email !== decodedEmail) {
+                return res.status(403).send({ message: 'forbidden access' })
+            }
+
             const query = {};
             const result = await categoriesCollection.find(query).toArray();
             res.send(result)
@@ -52,6 +82,15 @@ const run = async () => {
             const query = { Category: categoryName };
             const result = await productsCollection.find(query).toArray();
             res.send(result)
+        })
+
+        // ---> add product
+        app.post('/add-product', async (req, res) => {
+            const newProduct = req.body.body;
+            const result = await productsCollection.insertOne(newProduct);
+            res.send(result)
+            console.log(newProduct)
+
         })
 
         // ---> store users data
@@ -71,9 +110,13 @@ const run = async () => {
         // ---> store booking data
         app.post('/booking', async (req, res) => {
             const bookingData = req.body.body;
-            const result = await bookingCollection.insertOne(bookingData);
-            res.send(result)
+            // const result = await bookingCollection.insertOne(bookingData);
+            // res.send(result)
         })
+        // ---> get booking products
+        // app.get('/booking',async(req,res)=>{
+        //     const email = 
+        // })
 
         // ---> jwt token
         app.get('/jwt', async (req, res) => {
@@ -86,6 +129,8 @@ const run = async () => {
             }
             res.status(403).send({ accessToken: '' })
         })
+
+
 
 
     } finally { }
