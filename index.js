@@ -58,11 +58,11 @@ const run = async () => {
         })
 
         // ---> check seller
-        app.get('/users/admin/:email', async (req, res) => {
+        app.get('/users/seller/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
             const user = await usersCollection.findOne(query);
-            res.send({ isAdmin: user?.role === 'seller' })
+            res.send({ isSeller: user?.role === 'seller' })
         })
 
 
@@ -101,18 +101,25 @@ const run = async () => {
         })
 
         // ---> my products
+        // app.get('/my-products', async (req, res) => {
+        //     const email = req.query.email;
+        //     const query = { email: email };
+        //     const result = await bookingCollection.find(query).toArray();
+        //     res.send(result)
+        // })
         app.get('/my-products', async (req, res) => {
             const email = req.query.email;
-            const query = { email: email };
-            const result = await bookingCollection.find(query).toArray();
+            const query = { userEmail: email };
+            const result = await productsCollection.find(query).toArray();
             res.send(result)
+
         })
 
         // ---> my product delete
-        app.delete('/my-products/:id', verifyJWT, async (req, res) => {
+        app.delete('/my-products/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const result = await bookingCollection.deleteOne(query);
+            const result = await productsCollection.deleteOne(query);
             res.send(result)
         })
 
