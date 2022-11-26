@@ -49,6 +49,22 @@ const run = async () => {
         const usersCollection = client.db("mobilePlaza").collection("users");
         const bookingCollection = client.db("mobilePlaza").collection("booking");
 
+        // ---> check isAdmin
+        app.get('/users/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            res.send({ isAdmin: user?.role === 'admin' })
+        })
+
+        // ---> check seller
+        app.get('/users/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            res.send({ isAdmin: user?.role === 'seller' })
+        })
+
 
         // -----> test api 
         app.get('/', async (req, res) => {
