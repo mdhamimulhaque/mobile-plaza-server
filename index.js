@@ -101,18 +101,33 @@ const run = async () => {
         })
 
         // ---> my products
-        // app.get('/my-products', async (req, res) => {
-        //     const email = req.query.email;
-        //     const query = { email: email };
-        //     const result = await bookingCollection.find(query).toArray();
-        //     res.send(result)
-        // })
         app.get('/my-products', async (req, res) => {
             const email = req.query.email;
             const query = { userEmail: email };
             const result = await productsCollection.find(query).toArray();
             res.send(result)
+        })
 
+
+        // ---> make advertisement
+        app.put('/my-products/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    available: 'available'
+                },
+            };
+            const result = await productsCollection.updateOne(filter, updateDoc, options);
+            res.send(result)
+        })
+
+        // ---> show advertisement
+        app.get('/advertisement', async (req, res) => {
+            const query = { available: 'available' }
+            const advertiseProducts = await productsCollection.find(query).toArray();
+            res.send(advertiseProducts)
         })
 
 
