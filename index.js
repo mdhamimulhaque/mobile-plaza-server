@@ -64,6 +64,13 @@ const run = async () => {
             const user = await usersCollection.findOne(query);
             res.send({ isSeller: user?.role === 'seller' })
         })
+        // ---> check seller
+        app.get('/users/buyers/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            res.send({ isBuyer: user?.role === 'buyer' })
+        })
 
 
         // -----> test api 
