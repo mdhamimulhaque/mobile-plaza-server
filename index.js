@@ -115,6 +115,8 @@ const run = async () => {
 
         })
 
+
+
         // ---> my product delete
         app.delete('/my-products/:id', async (req, res) => {
             const id = req.params.id;
@@ -144,10 +146,13 @@ const run = async () => {
             const result = await bookingCollection.insertOne(bookingData);
             res.send(result)
         })
-        // ---> get booking products
-        // app.get('/booking',async(req,res)=>{
-        //     const email = 
-        // })
+
+        // ---> all sellers
+        app.get('/all-sellers', async (req, res) => {
+            const query = { role: 'seller' };
+            const sellers = await usersCollection.find(query).toArray();
+            res.send(sellers)
+        })
 
         // ---> jwt token
         app.get('/jwt', async (req, res) => {
