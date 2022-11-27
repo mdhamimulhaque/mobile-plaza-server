@@ -172,6 +172,7 @@ const run = async () => {
 
         })
 
+
         // ---> remove seller
         app.delete('/all-sellers/:email', async (req, res) => {
             const email = req.params.email;
@@ -180,6 +181,24 @@ const run = async () => {
             res.send(result)
 
         })
+
+        // ---> all sellers
+        app.get('/all-buyers', async (req, res) => {
+            const query = { role: 'buyer' };
+            const buyers = await usersCollection.find(query).toArray();
+            res.send(buyers)
+        })
+
+        // ---> remove buyers
+        app.delete('/all-buyers/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const result = await usersCollection.deleteOne(query);
+            res.send(result)
+
+        })
+
+
 
         // ---> jwt token
         app.get('/jwt', async (req, res) => {
