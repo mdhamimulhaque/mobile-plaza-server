@@ -130,13 +130,6 @@ const run = async () => {
             res.send(result)
         })
 
-        // ---> show advertisement
-        app.get('/advertisement', async (req, res) => {
-            const query = { available: 'available' }
-            const advertiseProducts = await productsCollection.find(query).toArray();
-            res.send(advertiseProducts)
-        })
-
 
 
         // ---> my product delete
@@ -145,6 +138,13 @@ const run = async () => {
             const query = { _id: ObjectId(id) };
             const result = await productsCollection.deleteOne(query);
             res.send(result)
+        })
+
+        // ---> show advertisement
+        app.get('/advertisement', async (req, res) => {
+            const query = { available: 'available' }
+            const advertiseProducts = await productsCollection.find(query).toArray();
+            res.send(advertiseProducts)
         })
 
 
@@ -168,6 +168,13 @@ const run = async () => {
         app.post('/booking', async (req, res) => {
             const bookingData = req.body.body;
             const result = await bookingCollection.insertOne(bookingData);
+            res.send(result)
+        })
+        // ---> my products
+        app.get('/booking', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email }
+            const result = await bookingCollection.find(query).toArray();
             res.send(result)
         })
 
@@ -233,6 +240,9 @@ const run = async () => {
             }
             res.status(403).send({ accessToken: '' })
         })
+
+
+
 
 
 
