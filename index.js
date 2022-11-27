@@ -154,6 +154,14 @@ const run = async () => {
             res.send(sellers)
         })
 
+        // ---> remove seller
+        app.delete('/all-sellers/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const result = await usersCollection.deleteOne(query);
+            res.send(result)
+        })
+
         // ---> jwt token
         app.get('/jwt', async (req, res) => {
             const email = req.query.email;
