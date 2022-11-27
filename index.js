@@ -140,6 +140,8 @@ const run = async () => {
             res.send(result)
         })
 
+
+
         // ---> store booking data
         app.post('/booking', async (req, res) => {
             const bookingData = req.body.body;
@@ -154,12 +156,29 @@ const run = async () => {
             res.send(sellers)
         })
 
+        // ---> verified user 
+        app.put('/all-sellers/:email', async (req, res) => {
+            const email = req.params.email;
+            const filter = { email: email };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    isVerifiedUser: true
+                },
+            };
+
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.send(result)
+
+        })
+
         // ---> remove seller
         app.delete('/all-sellers/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
             const result = await usersCollection.deleteOne(query);
             res.send(result)
+
         })
 
         // ---> jwt token
