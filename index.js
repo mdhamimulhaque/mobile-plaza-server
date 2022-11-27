@@ -48,6 +48,7 @@ const run = async () => {
         const productsCollection = client.db("mobilePlaza").collection("products");
         const usersCollection = client.db("mobilePlaza").collection("users");
         const bookingCollection = client.db("mobilePlaza").collection("booking");
+        const blogsCollection = client.db("mobilePlaza").collection("blogs");
 
         // ---> check isAdmin
         app.get('/users/admin/:email', async (req, res) => {
@@ -227,6 +228,13 @@ const run = async () => {
 
         })
 
+        // --->blogs
+
+        app.get('/blogs', async (req, res) => {
+            const query = {};
+            const blogs = await blogsCollection.find(query).toArray();
+            res.send(blogs)
+        })
 
 
         // ---> jwt token
