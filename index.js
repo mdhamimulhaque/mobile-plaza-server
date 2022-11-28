@@ -163,6 +163,15 @@ const run = async () => {
             res.send(result)
         })
 
+        // --->get users role
+
+        app.get("/seller-role", async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await usersCollection.find(query).project({ isVerifiedUser: 1 }).toArray();
+            res.send(result)
+        })
+
 
 
         // ---> store booking data
@@ -237,9 +246,11 @@ const run = async () => {
         })
 
 
+
         // ---> jwt token
         app.get('/jwt', async (req, res) => {
             const email = req.query.email;
+            console.log(email)
             const query = { email: email };
             const user = await usersCollection.findOne(query);
             if (user) {
