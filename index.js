@@ -261,6 +261,14 @@ const run = async () => {
             res.send(result)
         })
 
+        //---> remove from wish list
+        app.delete('/wish-list/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await wishListCollection.deleteOne(query);
+            res.send(result)
+
+        })
 
         // ---> jwt token
         app.get('/jwt', async (req, res) => {
